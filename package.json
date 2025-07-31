@@ -28,7 +28,7 @@
     "ai",
     "claude"
   ],
-  "author": "Europarcel Team",
+  "author": "Europarcel SRL",
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.17.0",
