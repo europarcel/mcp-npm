@@ -31,8 +31,36 @@ europarcel-mcp
 # Pull the image
 docker pull europarcel/mcp
 
-# Run with your API key
+# Create a .env file with your API key
+echo "EUROPARCEL_API_KEY=your-api-key-here" > .env
+
+# Run with environment file
+docker run -it --env-file .env europarcel/mcp
+
+# Or run with inline environment variable
 docker run -it -e EUROPARCEL_API_KEY=your-api-key europarcel/mcp
+```
+
+**Alternative: Using Docker Compose**
+
+Create a `docker-compose.yml` file:
+```yaml
+version: '3.8'
+services:
+  europarcel-mcp:
+    image: europarcel/mcp:latest
+    env_file: .env
+    stdin_open: true
+    tty: true
+```
+
+Then run:
+```bash
+# Create .env file (same as above)
+echo "EUROPARCEL_API_KEY=your-api-key-here" > .env
+
+# Run with docker-compose
+docker-compose up
 ```
 
 ### Using npx (No Installation)
