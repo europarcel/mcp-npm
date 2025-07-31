@@ -12,6 +12,27 @@ A Model Context Protocol (MCP) server for the Europarcel Public API, providing A
 
 ## Quick Start
 
+### Claude Desktop Configuration (Simplest - Copy & Paste)
+
+Add to your Claude Desktop config file:
+
+**macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+**Windows**: `%APPDATA%/Claude/claude_desktop_config.json`
+
+```json
+{
+  "mcpServers": {
+    "europarcel": {
+      "command": "npx",
+      "args": ["@europarcel/mcp"],
+      "env": {
+        "EUROPARCEL_API_KEY": "your-api-key-here"
+      }
+    }
+  }
+}
+```
+
 ### Using npm (Recommended)
 
 ```bash
@@ -23,6 +44,13 @@ export EUROPARCEL_API_KEY=your-api-key-here
 
 # Run the server
 europarcel-mcp
+```
+
+### Using npx (No Installation)
+
+```bash
+# Run directly
+EUROPARCEL_API_KEY=your-api-key npx @europarcel/mcp
 ```
 
 ### Using Docker
@@ -63,13 +91,6 @@ echo "EUROPARCEL_API_KEY=your-api-key-here" > .env
 docker-compose up
 ```
 
-### Using npx (No Installation)
-
-```bash
-# Run directly
-EUROPARCEL_API_KEY=your-api-key npx @europarcel/mcp
-```
-
 ## Configuration
 
 ### Environment Variables
@@ -77,27 +98,6 @@ EUROPARCEL_API_KEY=your-api-key npx @europarcel/mcp
 - `EUROPARCEL_API_KEY` (required) - Your Europarcel API key
 - `LOG_LEVEL` (optional) - Logging level: error, warn, info, debug (default: info)
 - `MCP_TRANSPORT` (optional) - Transport type: stdio, http (default: stdio)
-
-### Claude Desktop Configuration
-
-Add to your Claude Desktop config file:
-
-**macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-**Windows**: `%APPDATA%/Claude/claude_desktop_config.json`
-
-```json
-{
-  "mcpServers": {
-    "europarcel": {
-      "command": "npx",
-      "args": ["@europarcel/mcp"],
-      "env": {
-        "EUROPARCEL_API_KEY": "your-api-key-here"
-      }
-    }
-  }
-}
-```
 
 ## Available Tools
 
