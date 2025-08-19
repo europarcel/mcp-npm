@@ -207,7 +207,9 @@ export class EuroparcelApiClient {
    */
   async getFixedLocations(countryCode: string, params?: {
     locality_id?: number;
-    carrier_id?: number;
+    carrier_id?: number | string;
+    locality_name?: string;
+    county_name?: string;
   }): Promise<FixedLocation[]> {
     const response = await this.client.get<FixedLocation[]>("/locations/fixedlocations", {
       params: {

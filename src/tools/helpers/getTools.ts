@@ -84,7 +84,7 @@ export function registerGetToolsTool(server: McpServer): void {
 🔹 **getFixedLocations**
    • Purpose: Get fixed pickup/delivery locations (lockers)
    • Returns: Location details, addresses, coordinates, schedules
-   • Parameters: country_code (required), locality_id (optional), carrier_id (optional)
+   • Parameters: country_code (required), locality_id (optional), carrier_id (optional - single or comma-separated), locality_name+county_name (optional)
    • Use Case: Find pickup points and lockers for services 2, 3, 4
 
 🔹 **getFixedLocationById**
@@ -231,10 +231,11 @@ export function registerGetToolsTool(server: McpServer): void {
 • All tools handle error validation and provide detailed error messages
 • createOrder charges your wallet - use calculatePrices first to get quotes!
 • Pricing tool is complex - use getPricing first to understand structure
+• Address tools return ALL addresses automatically
 • Address IDs are preferred over full address details for performance
 • Fixed locations are required for services 2 (delivery), 3 (pickup), 4 (both)
 • COD and insurance require currency specifications
-• Most tools support pagination with per_page parameters
+• Search tools support pagination with per_page parameters
 • Order creation requires exact carrier_id/service_id (no 0 for 'all' options)
 `;
 

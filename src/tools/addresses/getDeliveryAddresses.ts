@@ -39,8 +39,8 @@ export function registerGetDeliveryAddressesTool(server: McpServer): void {
   server.registerTool(
     "getDeliveryAddresses",
     {
-      title: "Get All Delivery Addresses",
-      description: "Retrieves all delivery addresses for the authenticated customer. No pagination - returns complete list.",
+      title: "Get All Delivery Addresses", 
+      description: "Retrieves all delivery addresses (destination locations) for the authenticated customer. Returns complete list with coordinates and postal codes.",
       inputSchema: {}
     },
     async () => {

@@ -40,7 +40,7 @@ export function registerGetShippingAddressesTool(server: McpServer): void {
     "getShippingAddresses",
     {
       title: "Get All Shipping Addresses",
-      description: "Retrieves all shipping addresses for the authenticated customer. No pagination - returns complete list.",
+      description: "Retrieves all shipping addresses (pickup locations) for the authenticated customer. Returns complete list with coordinates and postal codes.",
       inputSchema: {}
     },
     async () => {

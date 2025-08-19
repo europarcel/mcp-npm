@@ -44,7 +44,7 @@ export function registerGetBillingAddressesTool(server: McpServer): void {
     "getBillingAddresses",
     {
       title: "Get All Billing Addresses",
-      description: "Retrieves all billing addresses for the authenticated customer. No pagination - returns complete list.",
+      description: "Retrieves all billing addresses for the authenticated customer. Returns complete list with business details, VAT info, and bank details.",
       inputSchema: {}
     },
     async () => {

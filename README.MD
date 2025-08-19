@@ -111,17 +111,17 @@ docker-compose up
 
 ### Address Tools
 
-2. **getBillingAddresses** - Retrieves billing addresses with pagination support
-   - Parameters: page, per_page (15|50|100|200), all (boolean)
-   - Returns: billing addresses with company details, VAT info, bank details
+2. **getBillingAddresses** - Retrieves all billing addresses
+   - Parameters: None
+   - Returns: complete list of billing addresses with business details, VAT info, bank details
 
-3. **getShippingAddresses** - Retrieves shipping addresses with pagination support
-   - Parameters: page, per_page (15|50|100|200), all (boolean)
-   - Returns: shipping addresses with coordinates and zip codes
+3. **getShippingAddresses** - Retrieves all shipping addresses (pickup locations)
+   - Parameters: None  
+   - Returns: complete list of shipping addresses with coordinates and postal codes
 
-4. **getDeliveryAddresses** - Retrieves delivery addresses with pagination support
-   - Parameters: page, per_page (15|50|100|200), all (boolean)
-   - Returns: delivery addresses with coordinates and zip codes
+4. **getDeliveryAddresses** - Retrieves all delivery addresses (destination locations)
+   - Parameters: None
+   - Returns: complete list of delivery addresses with coordinates and postal codes
 
 ### Location Tools
 
@@ -144,7 +144,7 @@ docker-compose up
     - Returns: service details with carrier and country information
 
 10. **getFixedLocations** - Retrieves fixed locations (lockers) for a country
-    - Parameters: country_code (required), locality_id, carrier_id (optional)
+    - Parameters: country_code (required), locality_id, carrier_id (single or comma-separated), locality_name+county_name (optional)
     - Returns: locker details including coordinates and schedule
 
 11. **getFixedLocationById** - Gets detailed information about a specific fixed location
@@ -229,7 +229,7 @@ After configuration, you can ask Claude:
 
 - "Get my Europarcel profile"
 - "Show me all my billing addresses"
-- "Get my shipping addresses (page 2, 50 per page)"
+- "Get all my shipping addresses"
 - "List my delivery addresses"
 - "What countries does Europarcel support?"
 - "Show me all counties in Romania (RO)"
@@ -237,6 +237,7 @@ After configuration, you can ask Claude:
 - "What carriers are available?"
 - "Show me services for carrier GLS in Romania"
 - "Find fixed locations (lockers) in Romania"
+- "Find lockers for carriers 1,2,3 in Bucharest, Romania"
 - "Get details for fixed location ID 123"
 - "Show my repayments"
 - "Get repayments for order 12345"
