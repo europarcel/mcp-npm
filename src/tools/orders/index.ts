@@ -6,6 +6,7 @@ import { registerTrackAwbsByCarrierTool } from "./trackAwbsByCarrier.js";
 import { registerGenerateLabelLinkTool } from "./generateLabelLink.js";
 import { registerTrackOrdersByIdsTool } from "./trackOrdersByIds.js";
 import { registerPricingTools } from "./getPricing.js";
+import { registerCreateOrderTool } from "./createOrder.js";
 import { logger } from "../../utils/logger.js";
 
 export function registerOrderTools(server: McpServer): void {
@@ -18,6 +19,7 @@ export function registerOrderTools(server: McpServer): void {
   registerTrackAwbsByCarrierTool(server);
   registerGenerateLabelLinkTool(server);
   registerTrackOrdersByIdsTool(server);
+  registerCreateOrderTool(server);
   
   // Register pricing tools as well since they're order-related
   registerPricingTools(server);
@@ -27,6 +29,7 @@ export function registerOrderTools(server: McpServer): void {
 
 // Export individual registration functions if needed
 export { registerGetOrdersTool } from "./getOrders.js";
+export { registerCreateOrderTool } from "./createOrder.js";
 export { registerGetOrderByIdTool } from "./getOrderById.js";
 export { registerCancelOrderTool } from "./cancelOrder.js";
 export { registerTrackAwbsByCarrierTool } from "./trackAwbsByCarrier.js";

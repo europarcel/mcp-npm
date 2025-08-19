@@ -2,8 +2,7 @@ import axios, { AxiosInstance, AxiosError } from "axios";
 import { logger } from "../utils/logger.js";
 import { 
   ApiError, 
-  ProfileResponse, 
-  WalletResponse,
+  ProfileResponse,
   BillingAddress,
   ShippingAddress,
   DeliveryAddress,
@@ -105,14 +104,6 @@ export class EuroparcelApiClient {
    */
   async getProfile(): Promise<ProfileResponse> {
     const response = await this.client.get<ProfileResponse>("/account/profile");
-    return response.data;
-  }
-  
-  /**
-   * Get wallet balance
-   */
-  async getWalletBalance(): Promise<WalletResponse> {
-    const response = await this.client.get<WalletResponse>("/account/credit");
     return response.data;
   }
   
@@ -374,6 +365,14 @@ export class EuroparcelApiClient {
    */
   async calculatePrices(priceRequest: PriceRequest): Promise<PriceResponse> {
     const response = await this.client.post<PriceResponse>("/orders/prices", priceRequest);
+    return response.data;
+  }
+
+  /**
+   * Create a new order
+   */
+  async createOrder(orderRequest: any): Promise<any> {
+    const response = await this.client.post("/orders", orderRequest);
     return response.data;
   }
 } 

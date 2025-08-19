@@ -25,13 +25,7 @@ export function registerGetToolsTool(server: McpServer): void {
    • Purpose: Retrieve complete customer profile information
    • Returns: Account details, wallet balance, notification preferences, marketing settings
    • Parameters: None
-   • Use Case: Get full customer account overview
-
-🔹 **getWalletBalance**
-   • Purpose: Get current wallet balance and status
-   • Returns: Balance amount, currency, wallet status (active/inactive)
-   • Parameters: None
-   • Use Case: Check available wallet funds
+   • Use Case: Get full customer account overview including wallet balance
 
 📍 **ADDRESS TOOLS**
 ───────────────────────────────────────────────────────────────────
@@ -123,6 +117,19 @@ export function registerGetToolsTool(server: McpServer): void {
 📦 **ORDER MANAGEMENT TOOLS**
 ───────────────────────────────────────────────────────────────────
 
+🔹 **createOrder**
+   • Purpose: Create a new shipping order (CHARGES YOUR WALLET!)
+   • Returns: Complete order details including order ID, AWB, pricing, tracking URL
+   • Parameters: Complete order structure (carrier_id, service_id, addresses, content, extra)
+   • Requirements: 
+     - Specific carrier_id and service_id (no 0 for 'all')
+     - Valid billing address ID owned by customer
+     - Complete from/to addresses (use IDs or full details)
+     - Exactly one content type > 0 (envelopes/pallets/parcels)
+     - Required parcel_content description
+     - Fixed locations per service: 1&5=none, 2=delivery, 3=pickup, 4=both
+   • Use Case: Actually place shipping orders after getting quotes
+
 🔹 **getOrders**
    • Purpose: Get list of customer orders with tracking info
    • Returns: Orders with status, AWB, carrier, service, amounts, tracking URLs
@@ -204,7 +211,7 @@ export function registerGetToolsTool(server: McpServer): void {
 **For Order Creation:**
 1. getProfile → getBillingAddresses → getShippingAddresses/getDeliveryAddresses
 2. getCarriers → getServices → getFixedLocations (if needed)
-3. calculatePrices → [create order with chosen option]
+3. calculatePrices → createOrder (with selected carrier/service)
 
 **For Address Management:**
 1. getCountries → getCounties → getLocalities
@@ -217,16 +224,18 @@ export function registerGetToolsTool(server: McpServer): void {
 3. generateLabelLink (for secure label sharing)
 
 **For Financial Tracking:**
-1. getWalletBalance
+1. getProfile (includes wallet balance)
 2. getRepayments → getPayoutReports
 
 📋 **NOTES:**
 • All tools handle error validation and provide detailed error messages
-• Pricing tool is the most complex - use getPricing first to understand structure
+• createOrder charges your wallet - use calculatePrices first to get quotes!
+• Pricing tool is complex - use getPricing first to understand structure
 • Address IDs are preferred over full address details for performance
 • Fixed locations are required for services 2 (delivery), 3 (pickup), 4 (both)
 • COD and insurance require currency specifications
 • Most tools support pagination with per_page parameters
+• Order creation requires exact carrier_id/service_id (no 0 for 'all' options)
 `;
 
         logger.info("getTools helper executed successfully");

@@ -109,114 +109,117 @@ docker-compose up
    - Notification preferences
    - Marketing settings
 
-2. **getWalletBalance** - Gets current wallet balance and currency
-
 ### Address Tools
 
-3. **getBillingAddresses** - Retrieves billing addresses with pagination support
+2. **getBillingAddresses** - Retrieves billing addresses with pagination support
    - Parameters: page, per_page (15|50|100|200), all (boolean)
    - Returns: billing addresses with company details, VAT info, bank details
 
-4. **getShippingAddresses** - Retrieves shipping addresses with pagination support
+3. **getShippingAddresses** - Retrieves shipping addresses with pagination support
    - Parameters: page, per_page (15|50|100|200), all (boolean)
    - Returns: shipping addresses with coordinates and zip codes
 
-5. **getDeliveryAddresses** - Retrieves delivery addresses with pagination support
+4. **getDeliveryAddresses** - Retrieves delivery addresses with pagination support
    - Parameters: page, per_page (15|50|100|200), all (boolean)
    - Returns: delivery addresses with coordinates and zip codes
 
 ### Location Tools
 
-6. **getCountries** - Retrieves all available countries
+5. **getCountries** - Retrieves all available countries
    - Returns: country code, name, currency, and language
 
-7. **getCounties** - Retrieves counties for a specific country
+6. **getCounties** - Retrieves counties for a specific country
    - Parameters: country_code (required)
    - Returns: county ID, code, and name
 
-8. **getLocalities** - Retrieves localities for a specific country and county
+7. **getLocalities** - Retrieves localities for a specific country and county
    - Parameters: country_code (required), county_code (required)
    - Returns: locality ID and name
 
-9. **getCarriers** - Retrieves all available carriers
+8. **getCarriers** - Retrieves all available carriers
    - Returns: carrier ID, name, and active status
 
-10. **getServices** - Retrieves services with carrier information
+9. **getServices** - Retrieves services with carrier information
     - Parameters: service_id, carrier_id, country_code (all optional)
     - Returns: service details with carrier and country information
 
-11. **getFixedLocations** - Retrieves fixed locations (lockers) for a country
+10. **getFixedLocations** - Retrieves fixed locations (lockers) for a country
     - Parameters: country_code (required), locality_id, carrier_id (optional)
     - Returns: locker details including coordinates and schedule
 
-12. **getFixedLocationById** - Gets detailed information about a specific fixed location
+11. **getFixedLocationById** - Gets detailed information about a specific fixed location
     - Parameters: id (required)
     - Returns: complete locker details including schedule and payment type
 
 ### Repayment Tools
 
-13. **getRepayments** - Retrieves customer repayments with payment details
+12. **getRepayments** - Retrieves customer repayments with payment details
     - Parameters: page (number), order_id (number - optional filter)
     - Returns: AWB, amounts, carrier info, delivery status, payout details
 
-14. **getPayoutReports** - Gets consolidated payout reports for bank transfers
+13. **getPayoutReports** - Gets consolidated payout reports for bank transfers
     - Parameters: page (number)
     - Returns: payout amounts, bank details, payment dates, status summary
 
 ### Search Tools
 
-15. **searchLocalities** - Advanced locality search with intelligent matching
+14. **searchLocalities** - Advanced locality search with intelligent matching
     - Parameters: country_code (2 letters, required), search (min 2 chars, required), per_page (15|50|100|200)
     - Supports: diacritics, punctuation, reversed county-city queries
     - Returns: locality ID, name, county information
 
-16. **searchStreets** - Search streets within a specific locality
+15. **searchStreets** - Search streets within a specific locality
     - Parameters: country_code (required), locality_id (required), search (required)
     - Returns: street name, ID, and postal code
 
-17. **postalCodeReverse** - Reverse lookup postal code to get location details
+16. **postalCodeReverse** - Reverse lookup postal code to get location details
     - Parameters: country_code (required), postal_code (required)
     - Returns: locality, county, and street information for the postal code
 
 ### Order Tools
 
-18. **getOrders** - List customer orders with tracking information
+17. **getOrders** - List customer orders with tracking information
     - Parameters: page (optional), per_page (15-200, optional)
     - Returns: paginated list of orders with status, carrier, AWB details
 
-19. **getOrderById** - Get detailed information about a specific order
-    - Parameters: order_id (required)
-    - Returns: complete order details, tracking history, financial breakdown
+18. **getOrderById** - Get detailed information about a specific order
+   - Parameters: order_id (required)
+   - Returns: complete order details, tracking history, financial breakdown
+
+19. **createOrder** - Create a new shipping order ⚠️ **CHARGES YOUR WALLET**
+   - Parameters: complete order structure (carrier_id, service_id, addresses, content, extra)
+   - Returns: order details including order ID, AWB, pricing, tracking URL
+   - Requirements: exact carrier/service IDs, valid addresses, correct content structure
 
 20. **cancelOrder** - Cancel an existing order
-    - Parameters: order_id (required), refund_channel ('wallet' or 'card', required)
-    - Returns: cancellation status and refund details
+   - Parameters: order_id (required), refund_channel ('wallet' or 'card', required)
+   - Returns: cancellation status and refund details
 
 21. **trackAwbsByCarrier** - Track multiple AWB numbers from a specific carrier
-    - Parameters: carrier_id (required), awb_list (array, max 200, required), language (optional)
-    - Returns: tracking status and history for each AWB
+   - Parameters: carrier_id (required), awb_list (array, max 200, required), language (optional)
+   - Returns: tracking status and history for each AWB
 
 22. **getOrderLabels** - Download shipping labels for multiple orders
-    - Parameters: order_ids (array, required), format ('A4' or 'A6', optional)
-    - Returns: PDF containing all shipping labels (binary data)
+   - Parameters: order_ids (array, required), format ('A4' or 'A6', optional)
+   - Returns: PDF containing all shipping labels (binary data)
 
 23. **trackOrdersByIds** - Track multiple orders by their IDs
-    - Parameters: order_ids (array, required), language (optional)
-    - Returns: tracking information for each order
+   - Parameters: order_ids (array, required), language (optional)
+   - Returns: tracking information for each order
 
 ### Pricing Tools
 
 24. **calculatePrices** - Calculate shipping prices for a shipment
-    - Complex tool with specific validation requirements
-    - Supports address IDs or full address details
-    - Handles multiple package types (envelopes, parcels, pallets)
-    - Service-specific fixed location requirements
-    - Returns prices from multiple carriers with delivery estimates
+   - Complex tool with specific validation requirements
+   - Supports address IDs or full address details
+   - Handles multiple package types (envelopes, parcels, pallets)
+   - Service-specific fixed location requirements
+   - Returns prices from multiple carriers with delivery estimates
 
 25. **getPricingExample** - Get a complete pricing request example
-    - Shows all required and optional fields
-    - Includes helpful comments and validation notes
-    - Great for learning the pricing API structure
+   - Shows all required and optional fields
+   - Includes helpful comments and validation notes
+   - Great for learning the pricing API structure
 
 ## Usage Examples
 
@@ -225,7 +228,6 @@ docker-compose up
 After configuration, you can ask Claude:
 
 - "Get my Europarcel profile"
-- "Check my wallet balance"
 - "Show me all my billing addresses"
 - "Get my shipping addresses (page 2, 50 per page)"
 - "List my delivery addresses"
@@ -245,6 +247,7 @@ After configuration, you can ask Claude:
 - "Show my recent orders"
 - "Get details for order 12345"
 - "Cancel order 12345 with refund to wallet"
+- "Create order with carrier 1, service 1, from address 123 to address 456"
 - "Track AWBs 123456, 789012 from carrier 1"
 - "Download shipping labels for orders 100, 101, 102"
 - "Calculate shipping price from Bucharest to Cluj for 2 parcels"
