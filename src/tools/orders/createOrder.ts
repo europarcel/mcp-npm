@@ -16,37 +16,37 @@ export function registerCreateOrderTool(server: McpServer): void {
       billing_address_id: z.number().min(1).describe("Billing address ID (must be owned by customer)")
     }).describe("Billing information"),
     address_from: z.object({
-      address_from_id: z.number().min(1).optional().describe("Existing address ID (shipping/delivery address owned by customer)"),
-      email: z.string().email().max(100).optional().describe("Email address (required if address_from_id not provided)"),
-      phone: z.string().min(7).max(64).optional().describe("Phone number (required if address_from_id not provided)"),
-      contact: z.string().min(5).max(100).optional().describe("Contact name (required if address_from_id not provided)"),
+      address_id: z.number().min(1).optional().describe("Existing address ID (shipping/delivery address owned by customer)"),
+      email: z.string().email().max(100).optional().describe("Email address (required if address_id not provided)"),
+      phone: z.string().min(7).max(64).optional().describe("Phone number (required if address_id not provided)"),
+      contact: z.string().min(5).max(100).optional().describe("Contact name (required if address_id not provided)"),
       company: z.string().min(5).max(64).optional().describe("Company name"),
-      country_code: z.string().length(2).optional().describe("Country code e.g. 'RO' (required if address_from_id not provided)"),
+      country_code: z.string().length(2).optional().describe("Country code e.g. 'RO' (required if address_id not provided)"),
       county_name: z.string().max(100).optional().describe("County name (not required if postal_code or locality_id provided)"),
       locality_name: z.string().max(100).optional().describe("Locality name (not required if postal_code or locality_id provided)"),
       locality_id: z.number().min(1).optional().describe("Locality ID (sufficient by itself)"),
-      street_name: z.string().min(5).max(100).optional().describe("Street name (required if address_from_id not provided)"),
-      street_number: z.string().max(25).optional().describe("Street number (required if address_from_id not provided)"),
+      street_name: z.string().min(5).max(100).optional().describe("Street name (required if address_id not provided)"),
+      street_number: z.string().max(25).optional().describe("Street number (required if address_id not provided)"),
       street_details: z.string().max(50).optional().describe("Additional street details"),
       postal_code: z.string().min(4).max(50).optional().describe("Postal code (sufficient by itself)"),
       fixed_location_id: z.number().min(1).optional().describe("Fixed location ID for PICKUP (Service 3&4 only)")
-    }).describe("From address - provide address_from_id OR full address details"),
+    }).describe("From address - provide address_id OR full address details"),
     address_to: z.object({
-      address_to_id: z.number().min(1).optional().describe("Existing address ID (shipping/delivery address owned by customer)"),
-      email: z.string().email().max(100).optional().describe("Email address (required if address_to_id not provided)"),
-      phone: z.string().min(7).max(64).optional().describe("Phone number (required if address_to_id not provided)"),
-      contact: z.string().min(5).max(100).optional().describe("Contact name (required if address_to_id not provided)"),
+      address_id: z.number().min(1).optional().describe("Existing address ID (shipping/delivery address owned by customer)"),
+      email: z.string().email().max(100).optional().describe("Email address (required if address_id not provided)"),
+      phone: z.string().min(7).max(64).optional().describe("Phone number (required if address_id not provided)"),
+      contact: z.string().min(5).max(100).optional().describe("Contact name (required if address_id not provided)"),
       company: z.string().min(5).max(64).optional().describe("Company name"),
-      country_code: z.string().length(2).optional().describe("Country code e.g. 'RO' (required if address_to_id not provided)"),
+      country_code: z.string().length(2).optional().describe("Country code e.g. 'RO' (required if address_id not provided)"),
       county_name: z.string().max(100).optional().describe("County name (not required if postal_code or locality_id provided)"),
       locality_name: z.string().max(100).optional().describe("Locality name (not required if postal_code or locality_id provided)"),
       locality_id: z.number().min(1).optional().describe("Locality ID (sufficient by itself)"),
-      street_name: z.string().min(5).max(100).optional().describe("Street name (required if address_to_id not provided)"),
-      street_number: z.string().max(25).optional().describe("Street number (required if address_to_id not provided)"),
+      street_name: z.string().min(5).max(100).optional().describe("Street name (required if address_id not provided)"),
+      street_number: z.string().max(25).optional().describe("Street number (required if address_id not provided)"),
       street_details: z.string().max(50).optional().describe("Additional street details"),
       postal_code: z.string().min(4).max(50).optional().describe("Postal code (sufficient by itself)"),
       fixed_location_id: z.number().min(1).optional().describe("Fixed location ID for DELIVERY (Service 2&4 only)")
-    }).describe("To address - provide address_to_id OR full address details"),
+    }).describe("To address - provide address_id OR full address details"),
     content: z.object({
       envelopes_count: z.number().min(0).describe("Number of envelopes (exactly one of envelopes/pallets/parcels must be > 0)"),
       pallets_count: z.number().min(0).describe("Number of pallets (exactly one of envelopes/pallets/parcels must be > 0)"),
@@ -60,7 +60,7 @@ export function registerCreateOrderTool(server: McpServer): void {
           length: z.number().min(0).describe("Parcel length")
         }),
         sequence_no: z.number().min(1).describe("Parcel sequence number (consecutive: 1,2,3...)")
-      })).optional().describe("Parcel details array (required when parcels_count > 0)")
+      })).default([]).describe("Parcel details array (required when parcels_count > 0, empty array for envelopes/pallets)")
     }).describe("Package content - exactly one count type must be > 0"),
     extra: z.object({
       parcel_content: z.string().max(100).describe("Package content description (required)"),
@@ -158,6 +158,11 @@ export function registerCreateOrderTool(server: McpServer): void {
           }
         }
 
+        // Add parcels field if missing (always required, even for envelopes/pallets)
+        if (!args.content.parcels) {
+          args.content.parcels = [];
+        }
+
         // Create the order by calling the API
         const orderResponse = await client.createOrder(args);
 
@@ -246,6 +251,7 @@ ${errorMessage}
 • Make sure you have sufficient wallet balance
 • Verify all addresses belong to your account
 • Use calculatePrices first to validate the request
+• For existing addresses, use address_id inside address_from/address_to objects
 • Check that fixed locations match service requirements:
   - Service 1&5: No fixed locations allowed
   - Service 2: Delivery location required  
