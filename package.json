@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "europarcel-mcp": "./dist/index.js"
+    "europarcel-mcp": "dist/index.js"
   },
   "scripts": {
     "build": "tsc",
@@ -58,7 +58,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/europarcel/mcp.git"
+    "url": "git+https://github.com/europarcel/mcp.git"
   },
   "bugs": {
     "url": "https://github.com/europarcel/mcp/issues"
