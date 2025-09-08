@@ -36,9 +36,74 @@ async function main() {
       const port = parseInt(process.env.MCP_PORT || "3000", 10);
       logger.info(`Starting Europarcel MCP server with HTTP transport on port ${port}`);
       
-      // HTTP transport implementation would go here
-      // This is a placeholder for future HTTP support
-      throw new Error("HTTP transport not yet implemented");
+      // Create Express app for HTTP transport
+      const express = await import('express');
+      const { rateLimit, ipKeyGenerator } = await import('express-rate-limit');
+      const app = express.default();
+      
+      app.use(express.default.json());
+      
+      // Rate limiting: configurable requests per minute and per hour
+      const rateLimitPerMinute = parseInt(process.env.RATE_LIMIT_PER_MINUTE || "50", 10);
+      const rateLimitPerHour = parseInt(process.env.RATE_LIMIT_PER_HOUR || "500", 10);
+      
+      const minuteRateLimit = rateLimit({
+        windowMs: 60 * 1000, // 1 minute
+        max: rateLimitPerMinute,
+        keyGenerator: (req) => {
+          // Single tenant - use IP for rate limiting
+          return `minute:${ipKeyGenerator(req.ip || 'unknown')}`;
+        },
+        message: {
+          error: 'Rate limit exceeded',
+          message: `Maximum ${rateLimitPerMinute} requests per minute allowed`
+        },
+        standardHeaders: true,
+        legacyHeaders: false,
+        skip: (req) => req.method === 'GET'
+      });
+
+      const hourRateLimit = rateLimit({
+        windowMs: 60 * 60 * 1000, // 1 hour
+        max: rateLimitPerHour,
+        keyGenerator: (req) => {
+          // Single tenant - use IP for rate limiting
+          return `hour:${ipKeyGenerator(req.ip || 'unknown')}`;
+        },
+        message: {
+          error: 'Rate limit exceeded',
+          message: `Maximum ${rateLimitPerHour} requests per hour allowed`
+        },
+        standardHeaders: true,
+        legacyHeaders: false,
+        skip: (req) => req.method === 'GET'
+      });
+      
+      // Redirect GET requests to configurable URL
+      const redirectUrl = process.env.REDIRECT_URL || 'https://europarcel.com';
+      app.get('/', (_, res) => {
+        res.redirect(301, redirectUrl);
+      });
+      
+      // Single-tenant MCP endpoint - uses API key from environment
+      app.post('/', minuteRateLimit, hourRateLimit, async (req, res) => {
+        try {
+          // Create fresh transport for each request
+          const { StreamableHTTPServerTransport } = await import('@modelcontextprotocol/sdk/server/streamableHttp.js');
+          const transport = new StreamableHTTPServerTransport({
+            sessionIdGenerator: undefined, // Disable session management
+          });
+          
+          await server.connect(transport);
+          await transport.handleRequest(req, res, req.body);
+        } catch (error) {
+          logger.error('MCP request error:', error);
+          res.status(500).json({ error: 'Internal server error' });
+        }
+      });
+      
+      // Start Express server
+      app.listen(port);
     } else {
       throw new Error(`Unknown transport type: ${transportType}`);
     }
