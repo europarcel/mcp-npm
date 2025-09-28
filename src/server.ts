@@ -10,14 +10,15 @@ import { logger } from "./utils/logger.js";
 
 export function createServer(): McpServer {
   logger.info("Creating Europarcel MCP server");
-  
+
   // Create the MCP server instance
   const server = new McpServer({
     name: "europarcel",
-    description: "MCP server for Europarcel API - Shipping and logistics services",
-    version: "1.0.9"
+    description:
+      "MCP server for Europarcel API - Shipping and logistics services",
+    version: "1.0.9",
   });
-  
+
   // Register all tools
   registerAccountTools(server);
   registerAddressTools(server);
@@ -26,8 +27,8 @@ export function createServer(): McpServer {
   registerSearchTools(server);
   registerOrderTools(server);
   registerHelperTools(server);
-  
+
   logger.info("Europarcel MCP server created with all tools registered");
-  
+
   return server;
-} 
+}

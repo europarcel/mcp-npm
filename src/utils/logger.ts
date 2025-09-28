@@ -1,7 +1,3 @@
-// EUROPARCEL/src/utils/logger.ts
-// This file provides logging functionality for the MCP server
-// This file IS NOT responsible for any business logic
-
 import winston from "winston";
 
 // Create logger instance

@@ -11,22 +11,22 @@ function formatAddress(address: any, type: string): string {
 - Phone: ${address.phone}
 - Email: ${address.email}
 - Location: ${address.locality_name}, ${address.county_name} (${address.country_code})
-- Street: ${address.street_name || 'N/A'} ${address.street_no}${address.street_details ? ', ' + address.street_details : ''}`;
+- Street: ${address.street_name || "N/A"} ${address.street_no}${address.street_details ? ", " + address.street_details : ""}`;
 
-  if ((type === 'Shipping' || type === 'Delivery') && address.zipcode) {
+  if ((type === "Shipping" || type === "Delivery") && address.zipcode) {
     details += `
 - Zip Code: ${address.zipcode}`;
   }
-  
-  if ((type === 'Shipping' || type === 'Delivery') && address.coordinates) {
+
+  if ((type === "Shipping" || type === "Delivery") && address.coordinates) {
     details += `
 - Coordinates: ${address.coordinates.lat}, ${address.coordinates.lng}`;
   }
-  
+
   details += `
-- Default: ${address.is_default ? 'Yes' : 'No'}
+- Default: ${address.is_default ? "Yes" : "No"}
 `;
-  
+
   return details;
 }
 
@@ -34,57 +34,58 @@ export function registerGetDeliveryAddressesTool(server: McpServer): void {
   // Create API client instance
   const apiKey = process.env.EUROPARCEL_API_KEY!;
   const client = new EuroparcelApiClient(apiKey);
-  
+
   // Register getDeliveryAddresses tool
   server.registerTool(
     "getDeliveryAddresses",
     {
-      title: "Get All Delivery Addresses", 
-      description: "Retrieves all delivery addresses (destination locations) for the authenticated customer. Returns complete list with coordinates and postal codes.",
-      inputSchema: {}
+      title: "Get All Delivery Addresses",
+      description:
+        "Retrieves all delivery addresses (destination locations) for the authenticated customer. Returns complete list with coordinates and postal codes.",
+      inputSchema: {},
     },
     async () => {
       try {
         logger.info("Fetching all delivery addresses");
-        
+
         const response = await client.getDeliveryAddresses({
-          all: true
+          all: true,
         });
-        
+
         logger.info(`Retrieved ${response.list.length} delivery addresses`);
-        
-        let formattedResponse = `Found ${response.meta.total} delivery address${response.meta.total !== 1 ? 'es' : ''}:\n\n`;
-        
+
+        let formattedResponse = `Found ${response.meta.total} delivery address${response.meta.total !== 1 ? "es" : ""}:\n\n`;
+
         if (response.list.length === 0) {
           formattedResponse += "No delivery addresses found.";
         } else {
           response.list.forEach((address: DeliveryAddress) => {
-            formattedResponse += formatAddress(address, 'Delivery') + '\n';
+            formattedResponse += formatAddress(address, "Delivery") + "\n";
           });
         }
-        
+
         return {
           content: [
             {
               type: "text",
-              text: formattedResponse
-            }
-          ]
+              text: formattedResponse,
+            },
+          ],
         };
       } catch (error: any) {
         logger.error("Failed to fetch delivery addresses", error);
-        
+
         return {
           content: [
             {
               type: "text",
-              text: `Error fetching delivery addresses: ${error.message || "Unknown error"}`
-            }
-          ]
+              text: `Error fetching delivery addresses: ${error.message || "Unknown error"}`,
+            },
+          ],
         };
       }
-    }
+    },
   );
-  
+
   logger.info("getDeliveryAddresses tool registered successfully");
-} 
+}
