@@ -1,12 +1,11 @@
 # Europarcel MCP Server
 
-A Model Context Protocol (MCP) server for the Europarcel Public API, providing AI assistants with tools to interact with shipping and logistics services. Self-hostable via Docker or npm.
+A Model Context Protocol (MCP) server for the Europarcel Public API, providing AI assistants with tools to interact with shipping and logistics services. Easy installation via npm.
 
 ## Features
 
 - 🚚 **Comprehensive Shipping Tools** - 25 tools covering account, addresses, locations, orders, tracking, and pricing
 - 🔐 **Secure API Integration** - Uses your own Europarcel API key
-- 🐳 **Docker Support** - Easy deployment with Docker
 - 📦 **npm Package** - Simple installation via npm/npx
 - 🤖 **AI Assistant Ready** - Works with Claude Desktop and other MCP-compatible clients
 
@@ -53,43 +52,6 @@ europarcel-mcp
 EUROPARCEL_API_KEY=your-api-key npx @europarcel/mcp
 ```
 
-### Using Docker
-
-```bash
-# Pull the image
-docker pull europarcel/mcp
-
-# Create a .env file with your API key
-echo "EUROPARCEL_API_KEY=your-api-key-here" > .env
-
-# Run with environment file
-docker run -it --env-file .env europarcel/mcp
-
-# Or run with inline environment variable
-docker run -it -e EUROPARCEL_API_KEY=your-api-key europarcel/mcp
-```
-
-**Alternative: Using Docker Compose**
-
-Create a `docker-compose.yml` file:
-```yaml
-version: '3.8'
-services:
-  europarcel-mcp:
-    image: europarcel/mcp:latest
-    env_file: .env
-    stdin_open: true
-    tty: true
-```
-
-Then run:
-```bash
-# Create .env file (same as above)
-echo "EUROPARCEL_API_KEY=your-api-key-here" > .env
-
-# Run with docker-compose
-docker-compose up
-```
 
 ## Configuration
 
@@ -260,14 +222,14 @@ After configuration, you can ask Claude:
 
 - Node.js 20+
 - TypeScript 5+
-- npm or yarn
+- npm 7+
 
 ### Setup
 
 ```bash
 # Clone the repository
-git clone https://github.com/europarcel/mcp.git
-cd mcp
+git clone https://github.com/europarcel/mcp-npm.git
+cd mcp-npm
 
 # Install dependencies
 npm install
@@ -299,7 +261,7 @@ For detailed API documentation, visit:
 
 - 📧 Email: cs@europarcel.com
 - 📚 Documentation: https://www.eawb.ro/docs
-- 🐛 Issues: https://github.com/europarcel/mcp/issues
+- 🐛 Issues: https://github.com/europarcel/mcp-npm/issues
 
 ## License
 
