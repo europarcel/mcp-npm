@@ -59,7 +59,6 @@ EUROPARCEL_API_KEY=your-api-key npx @europarcel/mcp
 
 - `EUROPARCEL_API_KEY` (required) - Your Europarcel API key
 - `LOG_LEVEL` (optional) - Logging level: error, warn, info, debug (default: info)
-- `MCP_TRANSPORT` (optional) - Transport type: stdio, http (default: stdio)
 
 ## Available Tools
 
