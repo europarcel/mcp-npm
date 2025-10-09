@@ -4,7 +4,7 @@ A Model Context Protocol (MCP) server for the Europarcel Public API, providing A
 
 ## Features
 
-- 🚚 **Comprehensive Shipping Tools** - 25 tools covering account, addresses, locations, orders, tracking, and pricing
+- 🚚 **Comprehensive Shipping Tools** - 24 tools covering account, addresses, locations, orders, tracking, and pricing
 - 🔐 **Secure API Integration** - Uses your own Europarcel API key
 - 📦 **npm Package** - Simple installation via npm/npx
 - 🤖 **AI Assistant Ready** - Works with Claude Desktop and other MCP-compatible clients
@@ -160,9 +160,9 @@ EUROPARCEL_API_KEY=your-api-key npx @europarcel/mcp
    - Parameters: carrier_id (required), awb_list (array, max 200, required), language (optional)
    - Returns: tracking status and history for each AWB
 
-22. **getOrderLabels** - Download shipping labels for multiple orders
+22. **generateLabelLink** - Generate secure download link for order labels
    - Parameters: order_ids (array, required), format ('A4' or 'A6', optional)
-   - Returns: PDF containing all shipping labels (binary data)
+   - Returns: secure download URL for shipping labels PDF
 
 23. **trackOrdersByIds** - Track multiple orders by their IDs
    - Parameters: order_ids (array, required), language (optional)
@@ -173,14 +173,9 @@ EUROPARCEL_API_KEY=your-api-key npx @europarcel/mcp
 24. **calculatePrices** - Calculate shipping prices for a shipment
    - Complex tool with specific validation requirements
    - Supports address IDs or full address details
-   - Handles multiple package types (envelopes, parcels, pallets)
+   - Handles multiple package types (envelopes, parcels)
    - Service-specific fixed location requirements
    - Returns prices from multiple carriers with delivery estimates
-
-25. **getPricingExample** - Get a complete pricing request example
-   - Shows all required and optional fields
-   - Includes helpful comments and validation notes
-   - Great for learning the pricing API structure
 
 ## Usage Examples
 
@@ -211,9 +206,8 @@ After configuration, you can ask Claude:
 - "Cancel order 12345 with refund to wallet"
 - "Create order with carrier 1, service 1, from address 123 to address 456"
 - "Track AWBs 123456, 789012 from carrier 1"
-- "Download shipping labels for orders 100, 101, 102"
+- "Generate label download link for orders 100, 101, 102"
 - "Calculate shipping price from Bucharest to Cluj for 2 parcels"
-- "Show me a pricing request example"
 
 ## Development
 
